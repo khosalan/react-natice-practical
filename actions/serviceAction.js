@@ -5,12 +5,15 @@ import {
   SERVICE_LIST_SUCCESS,
 } from "../constants/serviceConstant";
 
-export const listServices = () => async (dispatch, getState) => {
+export const listServices = (reinitalize = true) => async (
+  dispatch,
+  getState
+) => {
   let skip = getState().serviceList.skip;
   console.log(skip);
-  skip = 0;
+  //   skip = 0;
   try {
-    dispatch({ type: SERVICE_LIST_REQUEST });
+    if (reinitalize) dispatch({ type: SERVICE_LIST_REQUEST });
 
     const { data } = await api.get(`/services?skip=${skip}&take=10`);
     dispatch({
