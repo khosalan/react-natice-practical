@@ -31,7 +31,7 @@ export default (state = initialState, action) => {
       return { loading: false, userId, customerAccessToken };
 
     case SIGN_IN_FAIL:
-      return { ...initialState, error: payload.error };
+      return { ...initialState, error: action.payload };
 
     default:
       return state;

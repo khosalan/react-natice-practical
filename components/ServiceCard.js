@@ -1,27 +1,61 @@
 import React from "react";
-import { View, Text, Image, StyleSheet, Platform } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ImageBackground,
+  Platform,
+} from "react-native";
 import { Avatar } from "react-native-paper";
+import { AirbnbRating } from "react-native-ratings";
 
 const ServiceCard = (props) => {
   return (
     <View style={styles.card}>
-      <Image style={styles.image} source={require("../assets/exercise.jpeg")} />
-      <View style={styles.innerContainer}>
-        <Text style={styles.heading}>{props.title}</Text>
-        <Text>$100</Text>
-        <Text>Duration - 2hrs</Text>
+      <View style={styles.imageContainer}>
+        <ImageBackground
+          source={require("../assets/exercise.jpeg")}
+          style={styles.image}
+        >
+          <View
+            style={{
+              backgroundColor: "rgba(52, 52, 52, 0.8)",
+              paddingHorizontal: 10,
+              flexDirection: "row",
+            }}
+          >
+            <AirbnbRating
+              defaultRating={props.rating}
+              size={15}
+              isDisabled
+              showRating={false}
+              starContainerStyle={{ alignItems: "flex-start" }}
+            />
+            <Text style={styles.ratingText}>{`${
+              Math.round(props.rating * 100) / 100
+            } (${props.ratingCount} reviews)`}</Text>
+          </View>
+        </ImageBackground>
+      </View>
+      <View style={{ flex: 1 }}>
+        <View style={styles.innerContainer}>
+          <Text style={styles.heading}>{props.title}</Text>
+          <Text>${props.price}</Text>
+          <Text>{`Duration - ${props.duration} mins`}</Text>
 
-        <View style={styles.owner}>
-          <Avatar.Image
-            size={24}
-            source={require("../assets/exercise.jpeg")}
-            style={styles.avatar}
-          />
-          <Text>Name</Text>
-          <Image
-            source={require("../assets/exercise.jpeg")}
-            style={styles.countryLogo}
-          />
+          <View style={styles.owner}>
+            <Avatar.Image
+              size={24}
+              source={require("../assets/exercise.jpeg")}
+              style={styles.avatar}
+            />
+            <Text>{props.userName}</Text>
+            <Image
+              source={require("../assets/exercise.jpeg")}
+              style={styles.countryLogo}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -49,9 +83,20 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
   },
 
-  image: {
-    width: "100%",
+  imageContainer: {
     height: "60%",
+    // borderWidth: 1,
+  },
+
+  ratingText: {
+    color: "white",
+    marginLeft: 10,
+  },
+
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "flex-end",
   },
 
   innerContainer: {

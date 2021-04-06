@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, FlatList } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -7,22 +7,32 @@ import ServiceCard from "../components/ServiceCard";
 
 const ServicesScreen = () => {
   const dispatch = useDispatch();
+  const [loadMore, setLoadMore] = useState(false);
 
   useEffect(() => {
     dispatch(listServices());
-  }, []);
+  }, [dispatch]);
 
   const serviceList = useSelector((state) => state.serviceList);
 
   const { loading, services, error } = serviceList;
 
   const renderItem = ({ item }) => {
-    return <ServiceCard title={item.title} />;
+    return (
+      <ServiceCard
+        title={item.title}
+        price={item.price}
+        duration={item.durationMinutes}
+        rating={item.rating}
+        ratingCount={item.ratingCount}
+        userName={item.owner.name}
+      />
+    );
   };
 
   const handleLoadMore = async () => {
     try {
-      await dispatch(listServices());
+      setLoadMore(true);
     } catch (e) {}
   };
 

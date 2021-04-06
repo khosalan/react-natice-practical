@@ -8,6 +8,7 @@ import {
 export const listServices = () => async (dispatch, getState) => {
   let skip = getState().serviceList.skip;
   console.log(skip);
+  skip = 0;
   try {
     dispatch({ type: SERVICE_LIST_REQUEST });
 

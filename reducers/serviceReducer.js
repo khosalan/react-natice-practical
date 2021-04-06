@@ -15,10 +15,9 @@ export default serviceReducer = (state = initialState, action) => {
 
     case SERVICE_LIST_SUCCESS:
       return {
-        ...state,
         loading: false,
         services: state.services.concat(action.payload.services),
-        skip: state.skip + 10,
+        // skip: state.skip + 10,
       };
     default:
       return state;
