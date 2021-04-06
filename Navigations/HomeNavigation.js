@@ -1,10 +1,18 @@
 import React from "react";
+import { View } from "react-native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { createDrawerNavigator } from "@react-navigation/drawer";
+import {
+  createDrawerNavigator,
+  DrawerContentScrollView,
+  DrawerItemList,
+  DrawerItem,
+} from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
-import { FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import { useDispatch } from "react-redux";
+import { signOut } from "../actions/authActions";
 
 import HomeScreen from "../screens/HomeScreen";
 import ExploreScreen from "../screens/ExpertsScreen";
@@ -82,6 +90,7 @@ const BottomNavigation = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name='home' size={size} color={color} />
           ),
+          title: "Home",
         }}
       />
       <Tab.Screen
@@ -91,6 +100,7 @@ const BottomNavigation = () => {
           tabBarIcon: ({ color, size }) => (
             <FontAwesome name='search' size={size} color={color} />
           ),
+          title: "Explore",
         }}
       />
       <Tab.Screen
@@ -107,9 +117,35 @@ const BottomNavigation = () => {
 };
 
 const HomeNavigation = () => {
+  const dispatch = useDispatch();
+  const logoutHandler = () => {
+    dispatch(signOut());
+  };
   return (
-    <Drawer.Navigator>
-      <Drawer.Screen name='HomeDrawer' component={BottomNavigation} />
+    <Drawer.Navigator
+      drawerContentOptions={{ activeTintColor: "red" }}
+      initialRouteName='Home'
+      drawerContent={(props) => (
+        <DrawerContentScrollView contentContainerStyle={{ flex: 1 }}>
+          <View style={{ flex: 1 }}>
+            <View style={{ flexDirection: "row", alignItems: "center" }}></View>
+            <View style={{ flex: 1, marginTop: 10 }}>
+              <DrawerItemList {...props} />
+            </View>
+            <View style={{ marginVertical: 20, justifyContent: "center" }}>
+              <DrawerItem
+                label='Log Out'
+                onPress={logoutHandler}
+                icon={() => (
+                  <Ionicons name='settings' size={24} color='black' />
+                )}
+              />
+            </View>
+          </View>
+        </DrawerContentScrollView>
+      )}
+    >
+      <Drawer.Screen name='Home' component={BottomNavigation} />
     </Drawer.Navigator>
   );
 };

@@ -1,8 +1,10 @@
-import React, { useState } from "react";
-import { View, StyleSheet, Text, Alert } from "react-native";
+import React, { useState, useEffect } from "react";
+import { View, StyleSheet, Text, Alert, ActivityIndicator } from "react-native";
 import { TextInput, Button, Checkbox } from "react-native-paper";
 import { useDispatch } from "react-redux";
+
 import { signIn } from "../actions/authActions";
+import Colors from "../constants/colors";
 
 const reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
@@ -12,8 +14,12 @@ const LoginScreen = () => {
   const [password, setPassword] = useState("");
   const [isEmailValid, setEmailValid] = useState(false);
   const [isPasswordValid, setPasswordValid] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const dispatch = useDispatch();
+
+  console.log(loading);
 
   const changeEmailHandler = (email) => {
     if (!reg.test(email)) {
@@ -33,19 +39,39 @@ const LoginScreen = () => {
     setPassword(password);
   };
 
-  const submitFormHandler = () => {
+  const submitFormHandler = async () => {
     if (!isEmailValid || !isPasswordValid) {
       Alert.alert("Invalid", "Please enter valid email and passsord", [
         { text: "Ok" },
       ]);
+      return;
     }
 
     try {
-      dispatch(signIn(email, password));
+      setErrorMessage("");
+      setLoading(true);
+      await dispatch(signIn(email, password));
     } catch (e) {
-      console.log(e);
+      setErrorMessage(e.message);
+      setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("effec");
+    console.log(errorMessage);
+    if (errorMessage) {
+      Alert.alert("Alert", errorMessage, [{ text: "Ok" }]);
+    }
+  }, [errorMessage]);
+
+  if (loading) {
+    return (
+      <View style={styles.centered}>
+        <ActivityIndicator size='large' color={Colors.black} />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.screen}>
@@ -110,6 +136,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     marginVertical: 5,
+  },
+
+  centered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

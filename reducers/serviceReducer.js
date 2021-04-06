@@ -15,9 +15,11 @@ export default serviceReducer = (state = initialState, action) => {
 
     case SERVICE_LIST_SUCCESS:
       // console.log(state.services);
+      const updatedServices = state.services.concat(action.payload.services);
       return {
+        ...state,
         loading: false,
-        services: state.services.concat(action.payload.services),
+        services: updatedServices,
         skip: state.skip + 10,
       };
     default:

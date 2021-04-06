@@ -1,4 +1,5 @@
 import {
+  LOGOUT,
   SIGN_IN_FAIL,
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
@@ -13,12 +14,13 @@ const initialState = {
   isExpert: false,
   customerAccessToken: "",
   expertAccessToken: "",
+  error: "",
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGN_IN_REQUEST:
-      return { ...state, loading: true };
+      return { ...state };
 
     case SIGN_IN_SUCCESS:
       //   console.log(action.payload);
@@ -28,10 +30,16 @@ export default (state = initialState, action) => {
         isVerified,
         customerAccessToken,
       } = action.payload;
-      return { loading: false, userId, customerAccessToken };
+      return { userId, customerAccessToken };
 
     case SIGN_IN_FAIL:
       return { ...initialState, error: action.payload };
+
+    case LOGOUT: {
+      return {
+        ...initialState,
+      };
+    }
 
     default:
       return state;

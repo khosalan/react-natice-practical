@@ -10,14 +10,15 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { listServices } from "../actions/serviceAction";
 import ServiceCard from "../components/ServiceCard";
+import Colors from "../constants/colors";
 
 const ServicesScreen = () => {
   const dispatch = useDispatch();
-  const [loadMore, setLoadMore] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
 
   useEffect(() => {
     dispatch(listServices());
-  }, [dispatch]);
+  }, []);
 
   const serviceList = useSelector((state) => state.serviceList);
 
@@ -37,25 +38,31 @@ const ServicesScreen = () => {
   };
 
   const handleLoadMore = async () => {
+    if (isLoadingMore) return;
     try {
-      setLoadMore(true);
-      dispatch(listServices(false));
+      setIsLoadingMore(true);
+      await dispatch(listServices(false));
+      setIsLoadingMore(false);
     } catch (e) {}
   };
 
   const renderFooter = () => {
-    return loadMore ? (
-      <View style={styles.footer}>
-        <ActivityIndicator size='large' color='black' />
-      </View>
-    ) : (
-      <Text style={styles.empty}>Nothing to load more</Text>
+    return (
+      isLoadingMore && (
+        <View style={styles.footer}>
+          <ActivityIndicator size='large' color='black' />
+        </View>
+      )
     );
   };
 
   // console.log(services);
 
-  return (
+  return loading ? (
+    <View style={styles.cenetered}>
+      <ActivityIndicator size='large' color={Colors.black} />
+    </View>
+  ) : (
     <View style={styles.screen}>
       <FlatList
         data={services}
@@ -63,7 +70,7 @@ const ServicesScreen = () => {
         keyExtractor={(item) => item.serviceId}
         showsVerticalScrollIndicator={false}
         onEndReached={handleLoadMore}
-        onEndReachedThreshold={0.5}
+        onEndReachedThreshold={0.2}
         ListFooterComponent={renderFooter}
       />
     </View>
@@ -73,6 +80,7 @@ const ServicesScreen = () => {
 const styles = StyleSheet.create({
   screen: {
     marginHorizontal: 20,
+    flex: 1,
   },
 
   footer: {
@@ -83,6 +91,12 @@ const styles = StyleSheet.create({
   empty: {
     alignSelf: "center",
     marginVertical: 5,
+  },
+
+  cenetered: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

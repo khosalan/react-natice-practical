@@ -1,5 +1,6 @@
 import api from "../api";
 import {
+  LOGOUT,
   SIGN_IN_FAIL,
   SIGN_IN_REQUEST,
   SIGN_IN_SUCCESS,
@@ -15,7 +16,14 @@ export const signIn = (email, password) => async (dispatch) => {
     // console.log(data);
     dispatch({ type: SIGN_IN_SUCCESS, payload: data });
   } catch (error) {
-    console.log(error);
-    dispatch({ type: SIGN_IN_FAIL, payload: "error" });
+    throw new Error(
+      error.response.data.message
+        ? error.response.data.message
+        : "Something went wrong"
+    );
   }
+};
+
+export const signOut = () => {
+  return { type: LOGOUT };
 };

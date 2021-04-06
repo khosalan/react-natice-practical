@@ -9,11 +9,11 @@ export const listServices = (reinitalize = true) => async (
   dispatch,
   getState
 ) => {
-  let skip = getState().serviceList.skip;
-  console.log(skip);
   //   skip = 0;
   try {
     if (reinitalize) dispatch({ type: SERVICE_LIST_REQUEST });
+    let skip = getState().serviceList.skip;
+    console.log(skip);
 
     const { data } = await api.get(`/services?skip=${skip}&take=10`);
     dispatch({
