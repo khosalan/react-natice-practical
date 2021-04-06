@@ -79,6 +79,11 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     alignItems: "center",
   },
+
+  empty: {
+    alignSelf: "center",
+    marginVertical: 5,
+  },
 });
 
 export default ServicesScreen;

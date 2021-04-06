@@ -10,9 +10,9 @@ const AppNavigation = () => {
   console.log(isAuth);
   return (
     <NavigationContainer>
-      {/* {isAuth && <HomeNavigation />} */}
-      {/* {!isAuth && <AuthNavigation />} */}
-      <HomeNavigation />
+      {isAuth && <HomeNavigation />}
+      {!isAuth && <AuthNavigation />}
+      {/* <HomeNavigation /> */}
     </NavigationContainer>
   );
 };
